@@ -14,6 +14,8 @@ export default function InputBar(props) {
         style={styles.input}
         onChangeText={todoInput => props.textChange(todoInput)}
         value={props.todoInput}
+        placeholder="Enter an activity"
+        clearButtonMode="always"
       />
       <TouchableOpacity style={styles.addButton} onPress={props.addNewTodo}>
         <Text style={styles.addButtonText}>ADD</Text>

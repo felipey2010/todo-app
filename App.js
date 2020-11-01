@@ -12,16 +12,18 @@ export default class App extends React.Component {
 
     this.state = {
       todoInput: "",
-      todos: [
-        { id: 0, title: "Test things", done: false },
-        { id: 1, title: "Take dog out", done: false },
-      ],
+      todos: [],
     };
   }
 
   addNewTodo() {
     let todos = this.state.todos;
+    let inputText = this.state.todoInput;
 
+    //check for empty strings
+    if (!inputText.trim()) {
+      return;
+    }
     todos.unshift({
       id: todos.length + 1,
       title: this.state.todoInput,
@@ -72,6 +74,7 @@ export default class App extends React.Component {
         <InputBar
           textChange={todoInput => this.setState({ todoInput })}
           addNewTodo={() => this.addNewTodo()}
+          value={this.state.todoInput}
         />
         <FlatList
           data={this.state.todos}
