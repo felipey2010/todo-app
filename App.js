@@ -1,9 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
 import Header from "./components/header";
 import InputBar from "./components/inputBar";
+import TodoItem from "./components/TodoItem";
 
 export default class App extends React.Component {
   constructor() {
@@ -23,7 +24,7 @@ export default class App extends React.Component {
 
     todos.unshift({
       id: todos.length + 1,
-      todo: this.state.todoInput,
+      title: this.state.todoInput,
       done: false,
     });
 
@@ -31,6 +32,27 @@ export default class App extends React.Component {
       todos,
       todoInput: "",
     });
+  }
+
+  toggleDone(item) {
+    let todos = this.state.todos;
+
+    todos = todos.map(todo => {
+      if (todo.id == item.id) {
+        todo.done = !todo.done;
+      }
+      return todo;
+    });
+
+    this.setState({ todos });
+  }
+
+  removeTodo(item) {
+    let todos = this.state.todos;
+
+    todos = todos.filter(todo => todo.id !== item.id);
+
+    this.setState({ todos });
   }
 
   render() {
@@ -51,7 +73,20 @@ export default class App extends React.Component {
           textChange={todoInput => this.setState({ todoInput })}
           addNewTodo={() => this.addNewTodo()}
         />
-        <Text style={styles.text}>{this.state.todoInput}</Text>
+        <FlatList
+          data={this.state.todos}
+          extraData={this.state}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => {
+            return (
+              <TodoItem
+                todoItem={item}
+                toggleDone={() => this.toggleDone(item)}
+                removeTodo={() => this.removeTodo(item)}
+              />
+            );
+          }}
+        />
       </View>
     );
   }
